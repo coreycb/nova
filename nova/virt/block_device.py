@@ -644,14 +644,14 @@ class DriverVolumeBlockDevice(DriverBlockDevice):
         if not self['connection_info']:
             return
 
+        connector = virt_driver.get_volume_connector(instance)
         if not self['attachment_id']:
-            connector = virt_driver.get_volume_connector(instance)
             connection_info = volume_api.initialize_connection(context,
                                                                self.volume_id,
                                                                connector)
         else:
-            attachment_ref = volume_api.attachment_get(context,
-                                                       self['attachment_id'])
+            attachment_ref = volume_api.attachment_update(
+                context, self['attachment_id'], connector=connector)
             # The _volume_attach method stashes a 'multiattach' flag in the
             # BlockDeviceMapping.connection_info which is not persisted back
             # in cinder so before we overwrite the BDM.connection_info (via

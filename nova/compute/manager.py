@@ -957,7 +957,7 @@ class ComputeManager(manager.Manager):
                             vm_states.STOPPED)
 
                 block_dev_info = self._get_instance_block_device_info(context,
-                                                                      instance)
+                    instance, refresh_conn_info=True)
 
                 self.driver.finish_revert_migration(context,
                     instance, net_info, block_dev_info, power_on)
@@ -1002,7 +1002,8 @@ class ComputeManager(manager.Manager):
         LOG.info('Rebooting instance after nova-compute restart.',
                  instance=instance)
         block_device_info = \
-            self._get_instance_block_device_info(context, instance)
+            self._get_instance_block_device_info(context, instance,
+                refresh_conn_info=True)
 
         try:
             self.driver.resume_state_on_host_boot(
@@ -2606,7 +2607,7 @@ class ComputeManager(manager.Manager):
     def _power_on(self, context, instance):
         network_info = self.network_api.get_instance_nw_info(context, instance)
         block_device_info = self._get_instance_block_device_info(context,
-                                                                 instance)
+            instance, refresh_conn_info=True)
         self.driver.power_on(context, instance,
                              network_info,
                              block_device_info)
@@ -3062,7 +3063,7 @@ class ComputeManager(manager.Manager):
 
         block_device_info = \
             self._get_instance_block_device_info(
-                    context, instance, bdms=bdms)
+                    context, instance, refresh_conn_info=True, bdms=bdms)
 
         def detach_block_devices(context, bdms):
             for bdm in bdms:
@@ -3179,7 +3180,7 @@ class ComputeManager(manager.Manager):
         bdms = objects.BlockDeviceMappingList.get_by_instance_uuid(
             context, instance.uuid)
         block_device_info = self._get_instance_block_device_info(
-            context, instance, bdms=bdms)
+            context, instance, refresh_conn_info=True, bdms=bdms)
 
         network_info = self.network_api.get_instance_nw_info(context, instance)
 
@@ -3894,7 +3895,8 @@ class ComputeManager(manager.Manager):
             bdms = objects.BlockDeviceMappingList.get_by_instance_uuid(
                     context, instance.uuid)
             block_device_info = self._get_instance_block_device_info(
-                                context, instance, bdms=bdms)
+                                context, instance, refresh_conn_info=True,
+                                bdms=bdms)
 
             destroy_disks = not self._is_instance_storage_shared(
                 context, instance, host=migration.source_compute)
@@ -4274,7 +4276,8 @@ class ComputeManager(manager.Manager):
                    phase=fields.NotificationPhase.START, bdms=bdms)
 
             block_device_info = self._get_instance_block_device_info(
-                                context, instance, bdms=bdms)
+                                context, instance, refresh_conn_info=True,
+                                bdms=bdms)
 
             timeout, retry_interval = self._get_power_off_values(context,
                                             instance, clean_shutdown)

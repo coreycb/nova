@@ -840,7 +840,8 @@ class ComputeManagerUnitTestCase(test.NoDBTestCase):
         mock_get_power.assert_has_calls([mock.call(mock.ANY, instance),
                                          mock.call(mock.ANY, instance)])
         mock_plug.assert_called_once_with(instance, mock.ANY)
-        mock_get_inst.assert_called_once_with(mock.ANY, instance)
+        mock_get_inst.assert_called_once_with(mock.ANY, instance,
+                                              refresh_conn_info=True)
         mock_resume.assert_called_once_with(mock.ANY, instance, mock.ANY,
                                             'fake-bdm')
         mock_set_inst.assert_called_once_with(mock.ANY, instance)
@@ -1020,7 +1021,8 @@ class ComputeManagerUnitTestCase(test.NoDBTestCase):
                 power_state.SHUTDOWN)
             mock_get_nw.assert_called_once_with()
             mock_plug.assert_called_once_with(instance, [])
-            mock_get_inst.assert_called_once_with(self.context, instance)
+            mock_get_inst.assert_called_once_with(self.context, instance,
+                                                  refresh_conn_info=True)
             mock_finish.assert_called_once_with(self.context, instance,
                                                 [], [], power_on)
             mock_save.assert_called_once_with()

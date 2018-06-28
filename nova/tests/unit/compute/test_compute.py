@@ -3203,7 +3203,8 @@ class ComputeTestCase(BaseTestCase,
                                   reboot_type=reboot_type)
 
         self.assertEqual(expected_call_info, reboot_call_info)
-        mock_get_blk.assert_called_once_with(econtext, instance, bdms=bdms)
+        mock_get_blk.assert_called_once_with(econtext, instance, bdms=bdms,
+                                             refresh_conn_info=True)
         mock_get_nw.assert_called_once_with(econtext, instance)
         mock_notify_usage.assert_has_calls(notify_call_list)
         mock_notify_action.assert_has_calls(notify_action_call_list)
@@ -5505,7 +5506,8 @@ class ComputeTestCase(BaseTestCase,
                 mock.call(self.context, instance, 'fake-mini',
                       action='resize', phase='end', bdms='fake_bdms')])
             mock_get_instance_vol_bdinfo.assert_called_once_with(
-                    self.context, instance, bdms='fake_bdms')
+                    self.context, instance, bdms='fake_bdms',
+                    refresh_conn_info=True)
             mock_terminate_vol_conn.assert_called_once_with(self.context,
                     instance, 'fake_bdms')
             mock_get_power_off_values.assert_called_once_with(self.context,
